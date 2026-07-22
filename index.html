@@ -66,49 +66,49 @@
 const COLORS={1:'#185FA5',2:'#0F6E56'};
 
 const STOPS=[
-  {"n":1,"day":1,"lat":55.3494,"lng":11.5051,
+  {"n":1,"day":1,"lat":55.3498,"lng":11.5056,
    "name":"Museum East – Pansermuseum",
    "meta":"Fladholtevej 18, 4200 Slagelse",
-   "teaser":"Skandinaviens største museum for Den Kolde Krig med fokus på Warszawapagten og panserkøretøjer.",
-   "links":[["Læs mere","https://museumeast.dk/"],["Kort","https://maps.google.com/?q=55.3494,11.5051"]]},
+   "teaser":"Skandinaviens største museum for Den Kolde Krig med fokus på Warszawapagten og panserkøretøjer. · Voksne: 150 kr. · Grupper (min. 15 pers.): 130 kr./pers. · Krigsveteraner: 130 kr.",
+   "links":[["Læs mere","https://panzermuseumeast.dk/"],["Kort","https://maps.google.com/?q=55.3498,11.5056"]]},
 
-  {"n":2,"day":1,"lat":55.6775,"lng":12.4180,
+  {"n":2,"day":1,"lat":55.6899,"lng":12.4366,
    "name":"Ejbybunkeren / Oplevelsescenter Vestvolden",
    "meta":"Jyllingevej 303, 2610 Rødovre",
-   "teaser":"Den Kolde Krigs tophemmelige kontrolcentral i en autentisk bunker på Vestvolden – passer oplagt til koldkrigstemaet.",
-   "links":[["Læs mere","https://vestvolden.dk/"],["Kort","https://maps.google.com/?q=55.6775,12.4180"]]},
+   "teaser":"Den Kolde Krigs tophemmelige kontrolcentral i en autentisk bunker på Vestvolden – passer oplagt til koldkrigstemaet. · Voksne: 65 kr. · Grupper (min. 10 pers.): 55 kr./pers.",
+   "links":[["Læs mere","https://www.vestvolden.dk/ejbybunkeren/"],["Kort","https://maps.google.com/?q=55.6899,12.4366"]]},
 
-  {"n":3,"day":1,"lat":55.6887,"lng":12.6050,
-   "name":"Museet Skibene på Holmen",
-   "meta":"Elefanten 2, 1439 København K",
-   "teaser":"Oplev den kolde krig til søs ombord på fregatten Peder Skram, ubåden Sælen og Mastekranen.",
-   "links":[["Læs mere","https://www.orlogsmuseet.dk/"],["Kort","https://maps.google.com/?q=55.6887,12.6050"]]},
+  {"n":3,"day":1,"lat":55.6873,"lng":12.6064,
+   "name":"Skibene på Holmen",
+   "meta":"Elefanten 2, 1439 København K · OBS: Kun rundvisninger – ingen fri entre",
+   "teaser":"Oplev den kolde krig til søs ombord på fregatten Peder Skram, ubåden Sælen og Mastekranen. · Kræver forhåndsbooking · Min. 10 pers. · Peder Skram + ét skib (1,5–2t): 220 kr./pers. · Alle 3 skibe (2,5–3t): 330 kr./pers.",
+   "links":[["Book rundvisning","https://www.skibenepaaholmen.dk/rundvisninger"],["Kort","https://maps.google.com/?q=55.6873,12.6064"]]},
 
-  {"n":4,"day":2,"lat":55.6741,"lng":12.5806,
+  {"n":4,"day":2,"lat":55.6741,"lng":12.5805,
    "name":"Krigsmuseet",
    "meta":"Tøjhusgade 3, 1220 København K",
-   "teaser":"Danmarks krigshistorie gennem 500 år – fra danefæ og kanoner til Danmarks moderne krigsdeltagelse.",
-   "links":[["Læs mere","https://krigsmuseet.dk/"],["Kort","https://maps.google.com/?q=55.6741,12.5806"]]},
+   "teaser":"Danmarks krigshistorie gennem 500 år – fra danefæ og kanoner til Danmarks moderne krigsdeltagelse. · Grupperabat: 10% ved 10+ voksne · Forsvarets personel og veteraner: 20% rabat (gælder også ledsager).",
+   "links":[["Læs mere","https://krigsmuseet.dk/"],["Kort","https://maps.google.com/?q=55.6741,12.5805"]]},
 
-  {"n":5,"day":2,"lat":55.6881,"lng":12.5958,
+  {"n":5,"day":2,"lat":55.6881,"lng":12.5959,
    "name":"Frihedsmuseet",
    "meta":"Esplanaden 13, 1263 København K",
-   "teaser":"Historien om den danske modstandskamp under Besættelsen 1940–1945 i moderne, underjordiske rammer.",
-   "links":[["Læs mere","https://natmus.dk/frihedsmuseet/"],["Kort","https://maps.google.com/?q=55.6881,12.5958"]]}
+   "teaser":"Historien om den danske modstandskamp under Besættelsen 1940–1945 i moderne, underjordiske rammer. · Voksne: 130 kr. · Grupperabat: 10% ved 10+ voksne.",
+   "links":[["Læs mere","https://frihedsmuseet.dk/praktisk-information"],["Kort","https://maps.google.com/?q=55.6881,12.5959"]]}
 ];
 
 const DAYS=[
   {"d":1,"label":"Lørdag – dag 1","title":"Den Kolde Krig på Sjælland",
    "sub":"Slagelse → Ejbybunkeren → Holmen",
    "over":"Skalstrup · overnatning lørdag nat",
-   "stops":[1,2,3],"warn":null,
+   "stops":[1,2,3],"warn":"Skibene på Holmen kræver forhåndsbooking – der er ingen fri entré i åbningstiden. Book rundvisning på skibenepaaholmen.dk inden afrejse.",
    "extras":[{"title":"Andre muligheder i området","items":[
      ["Garnisonskirkegården & Nyboder","https://maps.google.com/?q=55.6895,12.5880","Militærhistorisk walk tæt på Holmen og centrum."],
-     ["Sporvejsmuseet Skjoldenæsholm","https://maps.google.com/?q=55.5085,11.9701","Historiske sporvogne og transport i Jystrup – oplagt dagsudflugt."]
+     ["Sporvejsmuseet Skjoldenæsholm","https://maps.google.com/?q=55.5085,11.9701","Historiske sporvogne og transport i Jystrup."]
    ]}]},
 
   {"d":2,"label":"Søndag – dag 2","title":"Besættelse og krigshistorie",
-   "sub":"Krigsmuseet og Frihedsmuseet, København C",
+   "sub":"Krigsmuseet og Frihedsmuseet · København C",
    "over":"Afrejse / hjemtransport efter Frihedsmuseet",
    "stops":[4,5],"warn":null}
 ];
@@ -123,16 +123,15 @@ const map=L.map('map',{scrollWheelZoom:true});
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
 
 const routePts=[
-  [55.3494,11.5051],
-  [55.6775,12.4180],
-  [55.6887,12.6050],
+  [55.3498,11.5056],
+  [55.6899,12.4366],
+  [55.6873,12.6064],
   [55.5839,12.1126],
-  [55.6741,12.5806],
-  [55.6881,12.5958]
+  [55.6741,12.5805],
+  [55.6881,12.5959]
 ];
 L.polyline(routePts,{color:'#888780',weight:2,dashArray:'7,5',opacity:0.6}).addTo(map);
 
-// Overnatningsmarkør
 const bedIcon=L.divIcon({
   html:'<div style="background:#343330;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;border:2px solid rgba(255,255,255,0.9);"><i class="ti ti-bed"></i></div>',
   className:'',iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-16]
