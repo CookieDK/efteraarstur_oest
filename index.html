@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tur til Sjælland – Rutekort</title>
+<title>Studietur Sjælland – Rutekort</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 <style>
@@ -15,7 +15,7 @@
   .zoom-bar span { font-size: 11px; color: #5f5e5a; }
   .zoom-btn { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; color: #fff; }
   .map-wrap { border-radius: 10px; overflow: hidden; border: 0.5px solid #d4d3ce; margin-bottom: 16px; }
-  #map { height: 520px; width: 100%; }
+  #map { height: 550px; width: 100%; }
   .hint { font-size: 11px; color: #5f5e5a; margin-bottom: 20px; display: flex; align-items: center; gap: 5px; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .col { display: flex; flex-direction: column; gap: 12px; }
@@ -31,6 +31,7 @@
   .stop-teaser { font-size: 11px; color: #343330; line-height: 1.38; margin-top: 3px; }
   .stop-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
   .stop-links a { font-size: 10.5px; color: #185FA5; text-decoration: none; border-bottom: 1px solid #185FA555; }
+  .warn-box { margin: 0 12px 10px; padding: 7px 10px; border-radius: 6px; background: #faeeda; border-left: 3px solid #ba7517; font-size: 11px; color: #854f0b; line-height: 1.45; }
   .extra-box { margin: 0 12px 10px; padding: 8px 10px; border-radius: 6px; background: #eef6f3; border-left: 3px solid #0F6E56; }
   .extra-title { font-size: 11px; font-weight: 700; color: #0F6E56; margin-bottom: 5px; }
   .extra-item { font-size: 11px; color: #343330; line-height: 1.4; margin: 5px 0; }
@@ -42,19 +43,18 @@
 </style>
 </head>
 <body>
-
-<h1>Program: Tur til Sjælland</h1>
-<p class="subtitle">2 dages studietur · 5 stop & overnatning i Skalstrup</p>
+<h1>Studietur Sjælland – Rutekort</h1>
+<p class="subtitle">2 dages studietur · 5 stop · Den Kolde Krig og besættelsestiden · Lørdag–søndag</p>
 
 <div class="zoom-bar">
   <span>Zoom til:</span>
   <button class="zoom-btn" style="background:#5F5E5A" onclick="zoomRegion('all')">Hele ruten</button>
-  <button class="zoom-btn" style="background:#185FA5" onclick="zoomRegion('day1')">Dag 1 (Midtsjælland, Vestvolden & Holmen)</button>
-  <button class="zoom-btn" style="background:#0F6E56" onclick="zoomRegion('day2')">Dag 2 (København C)</button>
+  <button class="zoom-btn" style="background:#185FA5" onclick="zoomRegion('dag1')">Dag 1 – Slagelse, Vestvolden &amp; Holmen</button>
+  <button class="zoom-btn" style="background:#0F6E56" onclick="zoomRegion('dag2')">Dag 2 – København C</button>
 </div>
 
 <div class="map-wrap"><div id="map"></div></div>
-<p class="hint"><i class="ti ti-hand-click" style="font-size:14px;"></i> Klik på et lokationsnavn for at springe til stedet på kortet</p>
+<p class="hint"><i class="ti ti-hand-click" style="font-size:14px;" aria-hidden="true"></i> Klik på et lokationsnavn for at springe til stedet på kortet</p>
 
 <div class="grid">
   <div class="col" id="col-a"></div>
@@ -63,204 +63,162 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-const COLORS = { 1: '#185FA5', 2: '#0F6E56' };
+const COLORS={1:'#185FA5',2:'#0F6E56'};
 
-const STOPS = [
-  {
-    "n": 1, 
-    "day": 1, 
-    "lat": 55.3494, 
-    "lng": 11.5051, 
-    "name": "Pansermuseum East", 
-    "meta": "Fladholtevej 18, 4200 Slagelse", 
-    "teaser": "Skandinaviens største museum for Den Kolde Krig med fokus på Warszawapagten og panserkøretøjer.", 
-    "links": [["Åbn i Google Maps", "https://www.google.com/maps?q=55.3494,11.5051"]]
-  },
-  {
-    "n": 2, 
-    "day": 1, 
-    "lat": 55.6775, 
-    "lng": 12.4180, 
-    "name": "Ejbybunkeren / Oplevelsescenter Vestvolden", 
-    "meta": "Jyllingevej 303, 2610 Rødovre", 
-    "teaser": "Oplev Den Kolde Krigs tophemmelige kontrolcentral i en autentisk bunker på Vestvolden. Passer oplagt til koldkrigstemaet!", 
-    "links": [["Åbn i Google Maps", "https://www.google.com/maps?q=55.6775,12.4180"]]
-  },
-  {
-    "n": 3, 
-    "day": 1, 
-    "lat": 55.6887, 
-    "lng": 12.6050, 
-    "name": "Museet Skibene på Holmen", 
-    "meta": "Elefanten 2, 1439 København K", 
-    "teaser": "Oplev den kolde krig til søs ombord på fregatten Peder Skram, ubåden Sælen og Mastekranen.", 
-    "links": [["Åbn i Google Maps", "https://www.google.com/maps?q=55.6887,12.6050"]]
-  },
-  {
-    "n": 4, 
-    "day": 2, 
-    "lat": 55.6741, 
-    "lng": 12.5806, 
-    "name": "Krigsmuseet", 
-    "meta": "Tøjhusgade 3, 1220 København", 
-    "teaser": "Danmarks krigshistorie gennem 500 år – fra danefæ og kanoner til Danmarks moderne krigsdeltagelse.", 
-    "links": [["Åbn i Google Maps", "https://www.google.com/maps?q=55.6741,12.5806"]]
-  },
-  {
-    "n": 5, 
-    "day": 2, 
-    "lat": 55.6881, 
-    "lng": 12.5958, 
-    "name": "Frihedsmuseet", 
-    "meta": "Esplanaden 13, 1263 København", 
-    "teaser": "Historien om den danske modstandskamp under Besættelsen 1940-1945 i moderne, underjordiske rammer.", 
-    "links": [["Åbn i Google Maps", "https://www.google.com/maps?q=55.6881,12.5958"]]
-  }
+const STOPS=[
+  {"n":1,"day":1,"lat":55.3494,"lng":11.5051,
+   "name":"Museum East – Pansermuseum",
+   "meta":"Fladholtevej 18, 4200 Slagelse",
+   "teaser":"Skandinaviens største museum for Den Kolde Krig med fokus på Warszawapagten og panserkøretøjer.",
+   "links":[["Læs mere","https://museumeast.dk/"],["Kort","https://maps.google.com/?q=55.3494,11.5051"]]},
+
+  {"n":2,"day":1,"lat":55.6775,"lng":12.4180,
+   "name":"Ejbybunkeren / Oplevelsescenter Vestvolden",
+   "meta":"Jyllingevej 303, 2610 Rødovre",
+   "teaser":"Den Kolde Krigs tophemmelige kontrolcentral i en autentisk bunker på Vestvolden – passer oplagt til koldkrigstemaet.",
+   "links":[["Læs mere","https://vestvolden.dk/"],["Kort","https://maps.google.com/?q=55.6775,12.4180"]]},
+
+  {"n":3,"day":1,"lat":55.6887,"lng":12.6050,
+   "name":"Museet Skibene på Holmen",
+   "meta":"Elefanten 2, 1439 København K",
+   "teaser":"Oplev den kolde krig til søs ombord på fregatten Peder Skram, ubåden Sælen og Mastekranen.",
+   "links":[["Læs mere","https://www.orlogsmuseet.dk/"],["Kort","https://maps.google.com/?q=55.6887,12.6050"]]},
+
+  {"n":4,"day":2,"lat":55.6741,"lng":12.5806,
+   "name":"Krigsmuseet",
+   "meta":"Tøjhusgade 3, 1220 København K",
+   "teaser":"Danmarks krigshistorie gennem 500 år – fra danefæ og kanoner til Danmarks moderne krigsdeltagelse.",
+   "links":[["Læs mere","https://krigsmuseet.dk/"],["Kort","https://maps.google.com/?q=55.6741,12.5806"]]},
+
+  {"n":5,"day":2,"lat":55.6881,"lng":12.5958,
+   "name":"Frihedsmuseet",
+   "meta":"Esplanaden 13, 1263 København K",
+   "teaser":"Historien om den danske modstandskamp under Besættelsen 1940–1945 i moderne, underjordiske rammer.",
+   "links":[["Læs mere","https://natmus.dk/frihedsmuseet/"],["Kort","https://maps.google.com/?q=55.6881,12.5958"]]}
 ];
 
-const DAYS = [
-  {
-    "d": 1, 
-    "label": "Dag 1 (Lørdag)", 
-    "title": "Slagelse → Ejbybunkeren → Holmen → Skalstrup", 
-    "sub": "Kold Krig & Militærhistorie", 
-    "over": "Overnatning: Skalstrup (Åbn i Google Maps: 55.5839, 12.1126)", 
-    "stops": [1, 2, 3],
-    "extras": [
-      {
-        "title": "Andre gode alternativer til lørdag:",
-        "items": [
-          ["Garnisonskirkegården & Nyboder", "https://www.google.com/maps?q=55.6895,12.5880", "Militærhistorisk walk tæt på Holmen og centrum."],
-          ["Sporvejsmuseet Skjoldenæsholm", "https://www.google.com/maps?q=55.5085,11.9701", "Historiske sporvogne og transport i Jystrup."]
-        ]
-      }
-    ]
-  },
-  {
-    "d": 2, 
-    "label": "Dag 2 (Søndag)", 
-    "title": "Krigsmuseet & Frihedsmuseet", 
-    "sub": "København C", 
-    "over": "Afrejse / Hjemtransport efter Frihedsmuseet", 
-    "stops": [4, 5]
-  }
+const DAYS=[
+  {"d":1,"label":"Lørdag – dag 1","title":"Den Kolde Krig på Sjælland",
+   "sub":"Slagelse → Ejbybunkeren → Holmen",
+   "over":"Skalstrup · overnatning lørdag nat",
+   "stops":[1,2,3],"warn":null,
+   "extras":[{"title":"Andre muligheder i området","items":[
+     ["Garnisonskirkegården & Nyboder","https://maps.google.com/?q=55.6895,12.5880","Militærhistorisk walk tæt på Holmen og centrum."],
+     ["Sporvejsmuseet Skjoldenæsholm","https://maps.google.com/?q=55.5085,11.9701","Historiske sporvogne og transport i Jystrup – oplagt dagsudflugt."]
+   ]}]},
+
+  {"d":2,"label":"Søndag – dag 2","title":"Besættelse og krigshistorie",
+   "sub":"Krigsmuseet og Frihedsmuseet, København C",
+   "over":"Afrejse / hjemtransport efter Frihedsmuseet",
+   "stops":[4,5],"warn":null}
 ];
 
-const REGIONS = {
-  all: [[55.3494, 11.5051], [55.6887, 12.6050], [55.5839, 12.1126]],
-  day1: [[55.3494, 11.5051], [55.6887, 12.6050]],
-  day2: [[55.6741, 12.5806], [55.6881, 12.5958]]
+const REGIONS={
+  all:  STOPS.map(s=>[s.lat,s.lng]),
+  dag1: STOPS.filter(s=>s.day===1).map(s=>[s.lat,s.lng]),
+  dag2: STOPS.filter(s=>s.day===2).map(s=>[s.lat,s.lng]),
 };
 
-const map = L.map('map', { scrollWheelZoom: true });
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 18,
-  attribution: '© OpenStreetMap contributors'
-}).addTo(map);
+const map=L.map('map',{scrollWheelZoom:true});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
 
-// Rutelinje
-const routePts = [
-  [55.3494, 11.5051], // Pansermuseum East
-  [55.6775, 12.4180], // Ejbybunkeren
-  [55.6887, 12.6050], // Holmen
-  [55.5839, 12.1126], // Skalstrup (Overnatning)
-  [55.6741, 12.5806], // Krigsmuseet
-  [55.6881, 12.5958]  // Frihedsmuseet
+const routePts=[
+  [55.3494,11.5051],
+  [55.6775,12.4180],
+  [55.6887,12.6050],
+  [55.5839,12.1126],
+  [55.6741,12.5806],
+  [55.6881,12.5958]
 ];
-L.polyline(routePts, { color: '#888780', weight: 2, dashArray: '7,5', opacity: 0.6 }).addTo(map);
+L.polyline(routePts,{color:'#888780',weight:2,dashArray:'7,5',opacity:0.6}).addTo(map);
 
-// Overnatnings-marker (Skalstrup)
-const bedIcon = L.divIcon({
-  html: '<div style="background:#343330;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;border:2px solid rgba(255,255,255,0.9);"><i class="ti ti-bed"></i></div>',
-  className: '', iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -16]
+// Overnatningsmarkør
+const bedIcon=L.divIcon({
+  html:'<div style="background:#343330;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;border:2px solid rgba(255,255,255,0.9);"><i class="ti ti-bed"></i></div>',
+  className:'',iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-16]
 });
-const bedMarker = L.marker([55.5839, 12.1126], { icon: bedIcon }).addTo(map);
-bedMarker.bindPopup('<b>Overnatning: Skalstrup</b><br><span style="font-size:11px;">55.5839, 12.1126</span><br><a href="https://www.google.com/maps?q=55.5839,12.1126" target="_blank" style="font-size:10.5px;color:#185FA5;">Åbn i Google Maps</a>');
+L.marker([55.5839,12.1126],{icon:bedIcon}).addTo(map)
+  .bindPopup('<b>Overnatning – Skalstrup</b><br><a href="https://maps.google.com/?q=55.5839,12.1126" target="_blank" style="font-size:11px;color:#185FA5;">Åbn i Google Maps</a>');
 
-const markers = {};
-const sm = Object.fromEntries(STOPS.map(s => [s.n, s]));
+const markers={};
+const sm=Object.fromEntries(STOPS.map(s=>[s.n,s]));
 
-function renderLinks(links) {
-  if (!links || !links.length) return '';
-  return '<div class="stop-links">' + links.map(([label, url]) => '<a href="' + url + '" target="_blank" rel="noopener">' + label + '</a>').join('') + '</div>';
+function renderLinks(links){
+  if(!links||!links.length) return '';
+  return '<div class="stop-links">'+links.map(([label,url])=>'<a href="'+url+'" target="_blank" rel="noopener">'+label+'</a>').join('')+'</div>';
 }
 
-STOPS.forEach(s => {
-  const c = COLORS[s.day];
-  const icon = L.divIcon({
-    html: '<div style="background:' + c + ';width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;border:2px solid rgba(255,255,255,0.9);">' + s.n + '</div>',
-    className: '', iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -16]
+STOPS.forEach(s=>{
+  const c=COLORS[s.day];
+  const icon=L.divIcon({
+    html:'<div style="background:'+c+';width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;border:2px solid rgba(255,255,255,0.9);">'+s.n+'</div>',
+    className:'',iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-16]
   });
-  const m = L.marker([s.lat, s.lng], { icon }).addTo(map);
-  m.bindPopup('<b>Stop ' + s.n + ': ' + s.name + '</b><br><span style="font-size:11px;">' + s.meta + '</span><br><span style="font-size:11px;">' + s.teaser + '</span>' + renderLinks(s.links));
-  markers[s.n] = m;
+  const m=L.marker([s.lat,s.lng],{icon}).addTo(map);
+  m.bindPopup('<b>Stop '+s.n+': '+s.name+'</b><br><span style="font-size:11px;color:#555;">'+s.meta+'</span><br><span style="font-size:11px;color:#333;margin-top:4px;display:block;">'+s.teaser+'</span>'+renderLinks(s.links));
+  markers[s.n]=m;
 });
 
-// Signaturforklaring
-const leg = L.control({ position: 'bottomleft' });
-leg.onAdd = () => {
-  const d = L.DomUtil.create('div');
-  d.style.cssText = 'background:rgba(255,255,255,0.96);padding:10px 12px;border-radius:8px;font-size:12px;line-height:2;font-family:sans-serif;border:1px solid rgba(0,0,0,0.1);';
-  d.innerHTML = `
-    <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${COLORS[1]};vertical-align:middle;margin-right:7px;"></span>Dag 1 – Slagelse, Ejbybunkeren & Holmen</div>
-    <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#343330;vertical-align:middle;margin-right:7px;"></span>Overnatning (Skalstrup)</div>
-    <div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${COLORS[2]};vertical-align:middle;margin-right:7px;"></span>Dag 2 – København C</div>
-  `;
+const leg=L.control({position:'bottomleft'});
+leg.onAdd=()=>{
+  const d=L.DomUtil.create('div');
+  d.style.cssText='background:rgba(255,255,255,0.96);padding:10px 12px;border-radius:8px;font-size:12px;line-height:2;font-family:sans-serif;border:1px solid rgba(0,0,0,0.1);';
+  d.innerHTML=
+    '<div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+COLORS[1]+';vertical-align:middle;margin-right:7px;"></span>Dag 1 – Slagelse, Vestvolden & Holmen</div>'+
+    '<div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#343330;vertical-align:middle;margin-right:7px;"></span>Overnatning – Skalstrup</div>'+
+    '<div><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+COLORS[2]+';vertical-align:middle;margin-right:7px;"></span>Dag 2 – København C</div>';
   return d;
 };
 leg.addTo(map);
 
-function zoomRegion(r) {
-  map.fitBounds(L.latLngBounds(REGIONS[r]).pad(0.15));
-}
+function zoomRegion(r){map.fitBounds(L.latLngBounds(REGIONS[r]).pad(0.15));}
 zoomRegion('all');
 
-function flyToStop(n) {
-  const s = sm[n];
-  map.setView([s.lat, s.lng], 14, { animate: true, duration: 0.8 });
-  setTimeout(() => markers[n].openPopup(), 850);
-  document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+function flyToStop(n){
+  const s=sm[n];
+  map.setView([s.lat,s.lng],15,{animate:true,duration:0.8});
+  setTimeout(()=>markers[n].openPopup(),850);
+  document.getElementById('map').scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-function extraHtml(day) {
-  if (!day.extras) return '';
-  return day.extras.map(box => '<div class="extra-box"><div class="extra-title">' + box.title + '</div>' +
-    box.items.map(([name, url, txt]) => '<div class="extra-item"><a href="' + url + '" target="_blank" rel="noopener">' + name + '</a> – ' + txt + '</div>').join('') +
+function extraHtml(day){
+  if(!day.extras) return '';
+  return day.extras.map(box=>'<div class="extra-box"><div class="extra-title">'+box.title+'</div>'+
+    box.items.map(([name,url,txt])=>'<div class="extra-item"><a href="'+url+'" target="_blank" rel="noopener">'+name+'</a> – '+txt+'</div>').join('')+
     '</div>').join('');
 }
 
-const colA = document.getElementById('col-a');
-const colB = document.getElementById('col-b');
+const colA=document.getElementById('col-a');
+const colB=document.getElementById('col-b');
 
-DAYS.forEach((day, i) => {
-  const col = i === 0 ? colA : colB;
-  const c = COLORS[day.d];
-  const items = day.stops.map(n => {
-    const s = sm[n];
-    return '<div class="stop-row">' +
-      '<span class="stop-num" style="background:' + c + ';">' + n + '</span>' +
-      '<div>' +
-        '<div class="stop-name" style="color:' + c + ';text-decoration-color:' + c + '55;" onclick="flyToStop(' + n + ')">' + s.name + '</div>' +
-        '<div class="stop-desc">' + s.meta + '</div>' +
-        '<div class="stop-teaser">' + s.teaser + '</div>' +
-        renderLinks(s.links) +
+DAYS.forEach((day,i)=>{
+  const col=i===0?colA:colB;
+  const c=COLORS[day.d];
+  const items=day.stops.map(n=>{
+    const s=sm[n];
+    return '<div class="stop-row">'+
+      '<span class="stop-num" style="background:'+c+';">'+n+'</span>'+
+      '<div>'+
+        '<div class="stop-name" style="color:'+c+';text-decoration-color:'+c+'55;" onclick="flyToStop('+n+')">'+s.name+'</div>'+
+        '<div class="stop-desc">'+s.meta+'</div>'+
+        '<div class="stop-teaser">'+s.teaser+'</div>'+
+        renderLinks(s.links)+
       '</div></div>';
   }).join('');
-
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML =
-    '<div style="background:' + c + ';padding:9px 12px;">' +
-      '<div class="card-day">' + day.label + '</div>' +
-      '<div class="card-title">' + day.title + '</div>' +
-      '<div class="card-sub">' + day.sub + '</div>' +
-    '</div>' +
-    '<div class="card-body">' + items + '</div>' +
-    extraHtml(day) +
-    '<div class="card-footer"><i class="ti ti-bed"></i><span>' + day.over + '</span></div>';
+  const warnHtml=day.warn?'<div class="warn-box"><i class="ti ti-alert-triangle" style="font-size:12px;vertical-align:-1px;margin-right:4px;"></i>'+day.warn+'</div>':'';
+  const card=document.createElement('div');
+  card.className='card';
+  card.innerHTML=
+    '<div style="background:'+c+';padding:9px 12px;">'+
+      '<div class="card-day">'+day.label+'</div>'+
+      '<div class="card-title">'+day.title+'</div>'+
+      '<div class="card-sub">'+day.sub+'</div>'+
+    '</div>'+
+    '<div class="card-body">'+items+'</div>'+
+    warnHtml+extraHtml(day)+
+    '<div class="card-footer"><i class="ti ti-bed"></i><span>'+day.over+'</span></div>';
   col.appendChild(card);
 });
 </script>
-
 </body>
 </html>
